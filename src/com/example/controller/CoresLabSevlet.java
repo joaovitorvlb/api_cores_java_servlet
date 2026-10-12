@@ -1,10 +1,12 @@
 package com.example.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.example.dao.CorLabEDAO;
 import com.example.model.CorLabE;
+import com.example.util.ResponseUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -27,7 +29,17 @@ public class CoresLabSevlet  extends HttpServlet
 
         CorLabEDAO dao = new CorLabEDAO();
 
-        List<CorLabE> cores = dao.listar();
+        List<CorLabE> cores;
+        try
+        {
+            cores = dao.listar();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            ResponseUtil.sendErrorResponse(response, 500, "Erro ao consultar o banco de dados", e.getMessage());
+            return;
+        }
 
         StringBuilder jsonBuilder = new StringBuilder();
         jsonBuilder.append("[");

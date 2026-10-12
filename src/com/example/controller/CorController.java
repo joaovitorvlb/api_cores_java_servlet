@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.example.dao.CorLabEDAO;
@@ -11,7 +12,7 @@ import com.example.model.CorLabE; // Ensure this import matches the actual packa
 
 public class CorController {
 
-    public static CorSratus testarCores(int r, int g, int b) 
+    public static CorSratus testarCores(int r, int g, int b) throws SQLException 
     {
         CorRGB cor = new CorRGB(r, g, b );
 
@@ -22,7 +23,7 @@ public class CorController {
         return statuss;
     }
 
-    private static CorSratus verificarEstagioDistancia(CorRGB cor) 
+    private static CorSratus verificarEstagioDistancia(CorRGB cor) throws SQLException 
     {
         double menorDistancia = Double.MAX_VALUE;
         CorSratus corSratus = new CorSratus();

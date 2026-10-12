@@ -14,7 +14,7 @@ public class EstagioDao
 {
     private Connection connection;
 
-    public EstagioDao() 
+    public EstagioDao() throws SQLException
     {
         this.connection = DatabaseUtil.getConnection();
     }  

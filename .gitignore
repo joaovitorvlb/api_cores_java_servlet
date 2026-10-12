@@ -1,0 +1,29 @@
+# Compilação e pacote de deploy
+build/
+bin/
+out/
+target/
+dist/
+*.class
+*.war
+
+# JARs gerados; as dependências em lib/ continuam no repositório
+*.jar
+!lib/*.jar
+
+# Logs e dumps da JVM
+*.log
+hs_err_pid*
+replay_pid*
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# Sistema
+.DS_Store
+Thumbs.db

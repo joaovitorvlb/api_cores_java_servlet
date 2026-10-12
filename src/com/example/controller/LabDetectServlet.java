@@ -3,10 +3,12 @@ package com.example.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import org.json.JSONObject;
 
 import com.example.model.CorSratus;
+import com.example.util.ResponseUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -50,7 +52,17 @@ public class LabDetectServlet   extends HttpServlet
         int g = requestData.getInt("g");
         int b = requestData.getInt("b");
 
-        CorSratus status = CorController.testarCores(r, g, b);
+        CorSratus status;
+        try
+        {
+            status = CorController.testarCores(r, g, b);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            ResponseUtil.sendErrorResponse(response, 500, "Erro ao consultar o banco de dados", e.getMessage());
+            return;
+        }
 
         // Create JSON response with status
         JSONObject jsonResponse = new JSONObject();

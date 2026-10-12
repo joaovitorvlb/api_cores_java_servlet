@@ -15,8 +15,8 @@ public class CorDAO
     public void salvar(Cor cor)  throws SQLException
     {
         String sql = "INSERT INTO cores (r, g, b, h, s, v, descricao) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        Connection conn = DatabaseUtil.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
              
             ps.setInt(1, cor.getR());
             ps.setInt(2, cor.getG());
@@ -31,11 +31,12 @@ public class CorDAO
         } 
     }
 
-    public List<Cor> listar() 
+    public List<Cor> listar() throws SQLException
     {
         String sql = "SELECT * FROM cores";
         List<Cor> cores = new ArrayList<>();
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql);ResultSet rs = ps.executeQuery()) 
+        Connection conn = DatabaseUtil.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery())
         {
             while (rs.next()) 
             {
@@ -50,10 +51,6 @@ public class CorDAO
                 Cor cor = new Cor(r, g, b, h, s, v, descricao);
                 cores.add(cor);
             }
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
         }
         return cores;
     }

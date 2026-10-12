@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.example.util.ResponseUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -63,7 +65,18 @@ public class PreverMaturacaoServlet extends HttpServlet
         int b = json.getInt("b");
 
         // Buscar dados do banco
-        try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost/bd", "usuario", "senha")) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            ResponseUtil.sendErrorResponse(response, 500, "Erro no banco", e.getMessage());
+            return;
+        }
+
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://127.0.0.1:3306/bd?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                "root",
+                "123456")) {
             PreparedStatement ps = conn.prepareStatement("SELECT r, g, b, maturacao FROM tomates WHERE maturacao IS NOT NULL");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -71,7 +84,7 @@ public class PreverMaturacaoServlet extends HttpServlet
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            response.sendError(500, "Erro no banco");
+            ResponseUtil.sendErrorResponse(response, 500, "Erro no banco", e.getMessage());
             return;
         }
 

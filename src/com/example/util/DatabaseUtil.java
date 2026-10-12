@@ -6,32 +6,33 @@ import java.sql.SQLException;
 
 public class DatabaseUtil 
 {
-    private static final String URL = "jdbc:postgresql://localhost:5432/aula_poo2";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "123456";
+    private static final String URL =
+            "jdbc:mysql://127.0.0.1:3306/api_cores"
+            + "?useSSL=false"
+            + "&allowPublicKeyRetrieval=true"
+            + "&serverTimezone=UTC";
+    private static final String USER = "api-cores";
+    private static final String PASSWORD = "6052026";
     
     private static Connection conexao;
 
-    public static Connection getConnection() 
+    public static Connection getConnection() throws SQLException
     {
-        if (conexao == null) 
+        if (conexao != null && !conexao.isClosed())
         {
-
-            try 
-            {
-                Class.forName("org.postgresql.Driver");
-                conexao = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("✅ Conexão bem-sucedida!");
-            } 
-            catch (SQLException e) 
-            {
-                System.err.println("❌ Erro ao conectar: " + e.getMessage());
-            }
-            catch (ClassNotFoundException e) 
-            {
-                System.err.println("❌ Erro ao carregar o driver: " + e.getMessage());
-            }
+            return conexao;
         }
+
+        try
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new SQLException("Driver MySQL não encontrado: " + e.getMessage(), e);
+        }
+
+        conexao = DriverManager.getConnection(URL, USER, PASSWORD);
         return conexao;
     }
 }

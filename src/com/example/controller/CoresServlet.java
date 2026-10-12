@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.example.dao.CorDAO;
 import com.example.model.Cor;
+import com.example.util.ResponseUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,7 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/cor_insert")
+@WebServlet("/color")
 public class CoresServlet  extends HttpServlet
 {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
@@ -62,9 +63,8 @@ public class CoresServlet  extends HttpServlet
             CorDAO corDAO = new CorDAO();
             corDAO.salvar(cor);
         } catch (SQLException e) {
-            
             e.printStackTrace();
-            response.sendError(500, "Erro ao salvar no banco de dados");
+            ResponseUtil.sendErrorResponse(response, 500, "Erro ao salvar no banco de dados", e.getMessage());
             return;
         }
 
@@ -104,10 +104,10 @@ public class CoresServlet  extends HttpServlet
             out.print(jsonResponse.toString());
             out.flush();
         } 
-        catch (Exception e) 
+        catch (SQLException e)
         {
             e.printStackTrace();
-            response.sendError(500, "Erro ao recuperar dados do banco de dados");
+            ResponseUtil.sendErrorResponse(response, 500, "Erro ao recuperar dados do banco de dados", e.getMessage());
         }
     }
 

@@ -17,34 +17,25 @@ public class CorLabEDAO
     public void salvar(CorLabE cor)  throws SQLException
     {
         String sql = "INSERT INTO padroes_lab (estagio_id, l_value, a_value, b_value) VALUES (?, ?, ?, ?)";
-        try 
-        {
-            Connection conn = DatabaseUtil.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-             
-            ps.setInt(1, cor.estagio.getId());
-            ps.setDouble(2, cor.cor.getL());
-            ps.setDouble(3, cor.cor.getA());
-            ps.setDouble(4, cor.cor.getB());
-            
-            ps.executeUpdate();
-        } 
-        catch (SQLException e) 
-        {
-            System.err.println("Erro ao salvar cor: " + e.getMessage());
-            e.printStackTrace();
-        }
+        Connection conn = DatabaseUtil.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+
+        ps.setInt(1, cor.estagio.getId());
+        ps.setDouble(2, cor.cor.getL());
+        ps.setDouble(3, cor.cor.getA());
+        ps.setDouble(4, cor.cor.getB());
+
+        ps.executeUpdate();
     }
 
-    public List<CorLabE> listar() 
+    public List<CorLabE> listar() throws SQLException
     {
         String sql = "SELECT * FROM padroes_media_lab";
         List<CorLabE> cores = new ArrayList<>();
-        try
+        Connection conn = DatabaseUtil.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery())
         {
-            Connection conn = DatabaseUtil.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
             EstagioDao estagioDao = new EstagioDao();
             List<Estagio> estagios = estagioDao.listar();
 
@@ -69,10 +60,6 @@ public class CorLabEDAO
                 CorLabE corEstagio = new CorLabE(cor, estagio);
                 cores.add(corEstagio);
             }
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
         }
         return cores;
     }
